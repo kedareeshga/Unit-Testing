@@ -1,0 +1,309 @@
+*** Settings ***
+Documentation     Simple example using SeleniumLibrary.
+Library           SeleniumLibrary
+
+*** Variables ***
+${LOGIN URL}      http://localhost:8069/web/login/
+${BROWSER}        Chrome
+${DOCTOR_NAME}    Kedareesh
+
+*** Test Cases ***
+Valid Login
+    [Tags]    TC1
+    Open Browser To Login Page
+    Sleep    1s
+    Input Username    kedareesh@csu.fullerton.edu
+    Sleep    1s
+    Input Password    openpgpwd
+    Submit Credentials
+    Sleep    1s
+    Welcome Page Should Be Open
+    Sleep    1s
+    Close Browser
+    [Teardown]    Close Browser
+
+Invalid login
+    [Tags]    TC2
+    Open Browser To Login Page
+    Sleep    5s
+    Input Username    kedareesh@csu.fullerton.edu
+    Sleep    5s
+    Input Password    pass
+    Submit Credentials
+    Sleep    5s
+    Close Browser
+
+Add patient
+    [Tags]    TC3
+    Open Browser To Login Page
+    Sleep    1s
+    Input Username    kedareesh@csu.fullerton.edu
+    Sleep    1s
+    Input Password    openpgpwd
+    Submit Credentials
+    Sleep    1s
+    Select Home
+    Sleep    1s
+    Select Hospital
+    Sleep    3s
+    Click Create
+    Sleep    3s
+    Input patient name    Roger
+    Sleep    3s
+    Responsible
+    Sleep    3s
+    Hover mouse
+    Sleep    3s
+    Select Administrator
+    Sleep    3s
+    Enter age    33
+    Sleep    3s
+    Save
+    Sleep    3s
+    Close Browser
+    [Teardown]    Close Browser
+
+Edit description
+    [Tags]    TC4
+    Open Browser To Login Page
+    Sleep    1s
+    Input Username    kedareesh@csu.fullerton.edu
+    Sleep    1s
+    Input Password    openpgpwd
+    Submit Credentials
+    Sleep    1s
+    Select Home
+    Sleep    1s
+    Select Hospital
+    Sleep    3s
+    Select patient
+    Sleep    3s
+    Edit
+    Sleep    3s
+    Edit Description    Patient details updated
+    Sleep    3s
+    Save
+    Sleep    3s
+    Close Browser
+
+Add Doctor
+    [Tags]    TC5
+    Open Browser To Login Page
+    Sleep    1s
+    Input Username    kedareesh@csu.fullerton.edu
+    Sleep    1s
+    Input Password    openpgpwd
+    Submit Credentials
+    Sleep    1s
+    Select Home
+    Sleep    1s
+    Select Hospital
+    Sleep    3s
+    Click Doctor menu
+    Sleep    3s
+    Click Create
+    Sleep    3s
+    Input Doctor Name    Kedareesh
+    Sleep    3s
+    Enter age    32
+    Sleep    3s
+    Edit Description    Psychiatrist
+    Sleep    3s
+    Select Gender
+    Sleep    3s
+    Save
+    Sleep    3s
+    Close Browser
+
+Schedule appointment
+    [Tags]    TC6
+    Open Browser To Login Page
+    Sleep    1s
+    Input Username    kedareesh@csu.fullerton.edu
+    Sleep    1s
+    Input Password    openpgpwd
+    Submit Credentials
+    Sleep    1s
+    Select Home
+    Sleep    1s
+    Select Hospital
+    Sleep    3s
+    Click Appointments Menu
+    Sleep    3s
+    Dropdown to Appointments
+    Sleep    3s
+    Click Appointments
+    Sleep    3s
+    Click Create
+    Sleep    3s
+    Select Doctor
+    Sleep    3s
+    Choose Patient
+    Sleep    3s
+    Select date
+    Sleep    3s
+    Select Checkup Time
+    Sleep    3s
+    Save
+    Sleep    3s
+    Close Browser
+
+Confirm scheduled appointment
+    [Tags]    TC7
+    Open Browser To Login Page
+    Sleep    1s
+    Input Username    kedareesh@csu.fullerton.edu
+    Sleep    1s
+    Input Password    openpgpwd
+    Submit Credentials
+    Sleep    1s
+    Select Home
+    Sleep    1s
+    Select Hospital
+    Sleep    3s
+    Click Appointments Menu
+    Sleep    3s
+    Dropdown to Appointments
+    Sleep    3s
+    Click Appointments
+    Sleep    3s
+    Confirm appointment
+    Sleep    3s
+    Confirm action
+    Sleep    3s
+    Press OK
+    Sleep    3s
+    Close Browser
+
+Complete an appointment
+    [Tags]    TC8
+    Open Browser To Login Page
+    Sleep    1s
+    Input Username    kedareesh@csu.fullerton.edu
+    Sleep    1s
+    Input Password    openpgpwd
+    Submit Credentials
+    Sleep    1s
+    Welcome Page Should Be Open
+    Sleep    1s
+    Select Home
+    Sleep    1s
+    Select Hospital
+    Sleep    3s
+    Select patient
+    Sleep    3s
+    Select patient Appointment
+    Sleep    3s
+    Mark as Done
+    Sleep    3s
+    Close Browser
+
+*** Keywords ***
+Open Browser To Login Page
+    Open Browser    ${LOGIN URL}    ${BROWSER}
+    Title Should Be    Login | My Website
+
+Input Username
+    [Arguments]    ${username}
+    Input Text    login    ${username}
+
+Input Password
+    [Arguments]    ${password}
+    Input Text    password    ${password}
+
+Submit Credentials
+    Click Element    //*[contains(text(),'Log in')]
+
+Welcome Page Should be Open
+    Title Should Be    Odoo - Discuss
+
+Select Home
+    Click Element    xpath=/html/body/header/nav/div[1]/button
+
+Select Hospital
+    Click Element    //a[@class="dropdown-item o_app"]
+
+Click Create
+    Click Element    //*[contains(text(),'Create')]
+
+Input patient name
+    [Arguments]    ${name}
+    Input Text    name    ${name}
+
+Responsible
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[4]/table[1]/tbody/tr[2]/td[2]/div/div[1]/div/input
+
+Hover mouse
+    Mouse Down    xpath=/html/body/ul/li[2]/a
+
+Select Administrator
+    Click Element    xpath=/html/body/ul/li[2]/a
+
+Enter age
+    [Arguments]    ${age}
+    Input Text    age    ${age}
+
+Select Gender
+    Click Element    //*[@class="o_input o_field_widget o_quick_editable o_required_modifier"]
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div/div[3]/table[2]/tbody/tr[1]/td[2]/select/option[3]
+
+Save
+    Click Element    //*[contains(text(),'Save')]
+
+Select patient
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div/div/table/tbody/tr[1]/td[2]
+
+Edit
+    Click Element    //*[contains(text(),'Edit')]
+
+Edit Description
+    [Arguments]    ${note}
+    Input Text    note    ${note}
+
+Click Doctor menu
+    Click Element    xpath=/html/body/header/nav/div[2]/div[2]/button/span
+    Click Element    xpath=/html/body/header/nav/div[2]/div[2]/div/a
+
+Input Doctor Name
+    [Arguments]    ${doctor_name}
+    Input Text    doctor_name    ${doctor_name}
+
+Click Appointments Menu
+    Click Element    xpath=/html/body/header/nav/div[2]/div[3]/button/span
+
+Dropdown to Appointments
+    Mouse Down    xpath=/html/body/header/nav/div[2]/div[3]/div/a[1]
+
+Click Appointments
+    Click Element    xpath=/html/body/header/nav/div[2]/div[3]/div/a[1]
+
+Choose Patient
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[2]/table[1]/tbody/tr[1]/td[2]/div/div[1]/div/input
+    Input Text    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[2]/table[1]/tbody/tr[1]/td[2]/div/div[1]/div/input    Roger
+
+Select Doctor
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[2]/table[2]/tbody/tr[1]/td[2]/div/div[1]/div/input
+    Input Text    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[2]/table[2]/tbody/tr[1]/td[2]/div/div[1]/div/input    Kedareesh
+
+Select Date
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[2]/table[2]/tbody/tr[2]/td[2]/div/input
+    Input Text    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[2]/table[2]/tbody/tr[2]/td[2]/div/input    05/23/2022
+
+Select Checkup Time
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[2]/table[2]/tbody/tr[2]/td[2]/div/input
+    Input Text    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[2]/table[2]/tbody/tr[2]/td[2]/div/input    05/23/2022 15:00:16
+
+Confirm appointment
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div/div[1]/table/tbody/tr[1]/td[3]
+
+Confirm action
+    Click Element    //*[contains(text(),'Confirm')]
+
+Press OK
+    Click Element    //*[contains(text(),'Ok')]
+
+Select patient Appointment
+    Click Element    xpath=/html/body/div[1]/div/div[2]/div/div[1]/div[2]/div[5]/div[2]/div/div/div[2]/div[1]/table/tbody/tr[1]/td[2]
+
+Mark as Done
+    Click Element    //*[contains(text(),'Mark As Done')]
